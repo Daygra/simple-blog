@@ -23,14 +23,4 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeWithModeratedComments(Builder $query):Builder
-    {
-        return $query->where('is_moderated', true);
-    }
-
-    public function scopeWithBlockedComments(Builder $query):Builder
-    {
-        return $query->where('is_moderated', false);
-    }
-
 }

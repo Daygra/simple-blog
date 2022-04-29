@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -17,6 +18,16 @@ class Comment extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeModeratedComments(Builder $query):Builder
+    {
+        return $query->where('is_moderated', Comment::MODERATED);
+    }
+
+    public function scopeBlockedComments(Builder $query):Builder
+    {
+        return $query->where('is_moderated', Comment::BLOCKED);
     }
 
 
