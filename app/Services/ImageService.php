@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class ImageService implements ImageServiceInterface
 {
 
-    public function saveImage(string $path, UploadedFile $image)
+    public function saveImage(string $path, UploadedFile $image):string
     {
         return $image->store($path);
     }
