@@ -11,7 +11,7 @@ class Post extends Model
 {
     public const IMAGE_STORAGE_PATH = 'postImages';
 
-    protected $fillable = ['title','slug','preview_text','detail_text'];
+    protected $fillable = ['title','slug','preview_text','detail_text','img_path','user_id'];
 
     public function comments():HasMany
     {

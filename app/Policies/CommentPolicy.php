@@ -32,7 +32,7 @@ class CommentPolicy
 
     public function deleteComment(User $user, Comment $comment)
     {
-        return $user->isAdmin() && ($comment->user_id === $user->id);
+        return $user->isAdmin() || ($comment->user_id === $user->id);
     }
 
 
