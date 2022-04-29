@@ -69,12 +69,54 @@ class CommentControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_action_store_validation(): void
+    {
+        $response = $this->post('/api/comments', [
+        ], ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'name'=>"The name field is required.",
+            'email'=>"The email field is required.",
+            'post_id'=>"The post id field is required."
+        ]);
+        $response = $this->post('/api/comments', [
+            'name' => $this->faker->text(3000),
+            'email' => $this->faker->name,
+            'post_id' => 0,
+        ], ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'name'=>"The name must not be greater than 255 characters.",
+            'email'=>"The email must be a valid email address.",
+            'post_id'=>"The selected post id is invalid."
+        ]);
+    }
+
     public function test_action_show(): void
     {
         $comment = Comment::create([
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'is_moderated' => Comment::MODERATED,
+            'post_id' => $this->post->id
+        ]);
+        $response = $this->get("/api/comments/$comment->id");
+        $response->assertStatus(200);
+
+        $comment = Comment::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'is_moderated' => Comment::BLOCKED,
+            'post_id' => $this->post->id
+        ]);
+        $response = $this->get("/api/comments/$comment->id");
+        $response->assertStatus(403);
+
+        Auth::login($this->user);
+        $comment = Comment::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'is_moderated' => Comment::BLOCKED,
             'post_id' => $this->post->id
         ]);
         $response = $this->get("/api/comments/$comment->id");

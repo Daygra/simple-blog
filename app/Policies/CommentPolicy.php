@@ -17,7 +17,8 @@ class CommentPolicy
     }
     public function viewComment(User $user, Comment $comment)
     {
-        return $user->isAdmin() || ($comment->user_id === $user->id) || ($comment->is_moderated === Comment::MODERATED);
+        return $user->isAdmin() || ($comment->user_id === $user->id && $user->id !== null ) ||
+            ($comment->is_moderated === Comment::MODERATED);
     }
 
     public function updateComment(User $user, Comment $comment)
