@@ -121,6 +121,32 @@ class CommentControllerTest extends TestCase
         ]);
         $response = $this->get("/api/comments/$comment->id");
         $response->assertStatus(200);
+        Auth::logout();
+
+        $user = User::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'password' => "$2a$12$0PNIdKIVSMNMd5YwKjyuX.oWRAUaxZlT01VfkoAZxbC9b7vtm12QK", //322322
+            'role' => User::ROLE_USER,
+        ]);
+        $comment = Comment::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'is_moderated' => Comment::BLOCKED,
+            'post_id' => $this->post->id
+        ]);
+        $response = $this->get("/api/comments/$comment->id");
+        $response->assertStatus(403);
+        Auth::login($user);
+        $comment = Comment::create([
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'is_moderated' => Comment::BLOCKED,
+            'post_id' => $this->post->id,
+            'user_id' => $user->id
+        ]);
+        $response = $this->get("/api/comments/$comment->id");
+        $response->assertStatus(200);
     }
 
     public function test_action_update(): void
