@@ -17,9 +17,9 @@ class PostCRUDService implements PostCRUDServiceInterface
         $this->imageService = $imageService;
     }
 
-    public function getAllPosts() :Collection
+    public function getAllPosts(int $page = 0, int $perPage = 100) :Collection
     {
-        return Post::all();
+        return Post::skip($page * $perPage)->take($perPage)->get();
     }
 
     public function createPost(array $fields): Post

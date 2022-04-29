@@ -25,7 +25,9 @@ class CommentController extends Controller
     {
         $canViewAll = auth()->user() ? auth()->user()->can('view-all-comments',Comment::class) : false;
         $postId = $request->get('postId',null);
-        $comments = $this->commentCRUDService->getAllComments($postId, $canViewAll);
+        $page = $request->get('page',0);
+        $perPage = $request->get('perPage',100);
+        $comments = $this->commentCRUDService->getAllComments($postId, $canViewAll,$page,$perPage);
         return response()->json(compact('comments'));
     }
 

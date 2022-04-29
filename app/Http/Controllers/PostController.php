@@ -7,6 +7,7 @@ use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\PostCRUDServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 
@@ -23,9 +24,11 @@ class PostController extends Controller
         $this->postCRUDService = $postCRUDService;
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $posts = $this->postCRUDService->getAllPosts();
+        $page = $request->get('page',0);
+        $perPage = $request->get('perPage',100);
+        $posts = $this->postCRUDService->getAllPosts($page, $perPage);
         return response()->json(compact('posts'));
     }
 

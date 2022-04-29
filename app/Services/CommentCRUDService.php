@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CommentCRUDService implements CommentCRUDServiceInterface
 {
-    public function getAllComments(int $postId = null, bool $canViewAll = false): Collection
+    public function getAllComments( $postId = null, bool $canViewAll = false, int $page = 0, int $perPage = 100): Collection
     {
         $query = Comment::when($postId, function (Builder $query) use ($postId) {
             $query->where('post_id', $postId);
@@ -19,7 +19,7 @@ class CommentCRUDService implements CommentCRUDServiceInterface
                     ->where('user_id', auth()->id());
                 });
         });
-        return $query->get();
+        return $query->skip($page * $perPage)->take($perPage)->get();
 
     }
 
