@@ -29,6 +29,6 @@ abstract class AbstractBaseCommentRequest extends FormRequest
      *
      * @return array
      */
-   abstract public function rules(): array;
+    abstract public function rules(): array;
 
 }

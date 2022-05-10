@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 
-
 class PostController extends Controller
 {
     /**
@@ -26,8 +25,8 @@ class PostController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $page = $request->get('page',0);
-        $perPage = $request->get('perPage',100);
+        $page = $request->get('page', 0);
+        $perPage = $request->get('perPage', 100);
         $posts = $this->postCRUDService->getAllPosts($page, $perPage);
         return response()->json(compact('posts'));
     }
@@ -46,7 +45,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         if (auth()->user()->cannot('update-post', $post)) {
-            return response()->noContent( Response::HTTP_FORBIDDEN);
+            return response()->noContent(Response::HTTP_FORBIDDEN);
         }
         $post = $this->postCRUDService->updatePost($post, $request->validated());
         return response()->json($post);
@@ -55,11 +54,11 @@ class PostController extends Controller
     public function destroy(Post $post): Response
     {
         if (auth()->user()->cannot('delete-post', $post)) {
-            return response()->noContent( Response::HTTP_FORBIDDEN);
+            return response()->noContent(Response::HTTP_FORBIDDEN);
         }
-        if ($this->postCRUDService->deletePost($post)){
-            return response()->noContent( Response::HTTP_OK );
+        if ($this->postCRUDService->deletePost($post)) {
+            return response()->noContent(Response::HTTP_OK);
         }
-        return response()->noContent( Response::HTTP_NO_CONTENT );
+        return response()->noContent(Response::HTTP_NO_CONTENT);
     }
 }

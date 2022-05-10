@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Post;
 
-class StorePostRequest  extends AbstractBasePostRequest
+class StorePostRequest extends AbstractBasePostRequest
 {
     public function rules(): array
     {

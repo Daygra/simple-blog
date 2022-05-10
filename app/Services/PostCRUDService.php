@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PostCRUDService implements PostCRUDServiceInterface
 {
-   /**
-   * @var $imageService ImageServiceInterface
-   */
-   private $imageService;
+    /**
+     * @var $imageService ImageServiceInterface
+     */
+    private $imageService;
 
     public function __construct(ImageServiceInterface $imageService)
     {
         $this->imageService = $imageService;
     }
 
-    public function getAllPosts(int $page = 0, int $perPage = 100) :Collection
+    public function getAllPosts(int $page = 0, int $perPage = 100): Collection
     {
         return Post::skip($page * $perPage)->take($perPage)->get();
     }
@@ -35,7 +35,8 @@ class PostCRUDService implements PostCRUDServiceInterface
     public function updatePost(Post $post, array $fields): Post
     {
         $post->fill($fields);
-        if(!$this->imageService->isImagesAreSame($this->imageService->getImgContentByPath($post->img_path), $fields['img']->get())) {
+        if (!$this->imageService->isImagesAreSame($this->imageService->getImgContentByPath($post->img_path),
+            $fields['img']->get())) {
             $this->imageService->deleteImage($post->img_path);
             $post->img_path = $this->imageService->saveImage(Post::IMAGE_STORAGE_PATH, $fields['img']);
         }
@@ -48,7 +49,6 @@ class PostCRUDService implements PostCRUDServiceInterface
         $this->imageService->deleteImage($post->img_path);
         return $post->delete();
     }
-
 
 
 }

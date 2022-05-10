@@ -15,17 +15,19 @@ class CommentPolicy
     {
         return $user->isAdmin();
     }
+
     public function viewComment(User $user, Comment $comment)
     {
-        return $user->isAdmin() || ($comment->user_id === $user->id && $user->id !== null ) ||
+        return $user->isAdmin() || ($comment->user_id === $user->id && $user->id !== null) ||
             ($comment->is_moderated === Comment::MODERATED);
     }
 
     public function updateComment(User $user, Comment $comment)
     {
         return $user->isAdmin() ||
-            ($comment->user_id === $user->id && $comment->is_moderated === Comment::BLOCKED );
+            ($comment->user_id === $user->id && $comment->is_moderated === Comment::BLOCKED);
     }
+
     public function moderateComment(User $user, Comment $comment)
     {
         return $user->isAdmin() || ($comment->post->user_id === $user->id);

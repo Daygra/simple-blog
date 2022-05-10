@@ -9,22 +9,23 @@ use Illuminate\Support\Facades\Storage;
 class ImageService implements ImageServiceInterface
 {
 
-    public function saveImage(string $path, UploadedFile $image):string
+    public function saveImage(string $path, UploadedFile $image): string
     {
         return $image->store($path);
     }
 
     public function deleteImage(string $path): bool
     {
-       return Storage::delete($path);
+        return Storage::delete($path);
     }
 
     public function isImagesAreSame(string $firstImageContent, string $secondImageContent): bool
     {
-        return hash('md5',$firstImageContent) === hash('md5',$secondImageContent);
+        return hash('md5', $firstImageContent) === hash('md5', $secondImageContent);
     }
+
     public function getImgContentByPath($path): string
     {
-     return Storage::get($path);
+        return Storage::get($path);
     }
 }

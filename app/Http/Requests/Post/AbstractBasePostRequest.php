@@ -32,6 +32,6 @@ abstract class AbstractBasePostRequest extends FormRequest
      *
      * @return array
      */
-   abstract public function rules(): array;
+    abstract public function rules(): array;
 
 }

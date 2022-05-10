@@ -14,9 +14,9 @@ class CommentCRUDService implements CommentCRUDServiceInterface
             $query->where('post_id', $postId);
         })->when(!$canViewAll, function (Builder $query) {
             $query->where('is_moderated', Comment::MODERATED)
-                ->orWhere(function(Builder $query){
+                ->orWhere(function (Builder $query) {
                     $query->whereNotNull('user_id')
-                    ->where('user_id', auth()->id());
+                        ->where('user_id', auth()->id());
                 });
         });
         return $query->skip($page * $perPage)->take($perPage)->get();

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Comment;
 
-class UpdateCommentRequest  extends AbstractBaseCommentRequest
+class UpdateCommentRequest extends AbstractBaseCommentRequest
 {
     public function rules(): array
     {
