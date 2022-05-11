@@ -42,23 +42,23 @@ class PostController extends Controller
         return response()->json($post);
     }
 
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
         if (auth()->user()->cannot('update-post', $post)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         $post = $this->postCRUDService->updatePost($post, $request->validated());
         return response()->json($post);
     }
 
-    public function destroy(Post $post): Response
+    public function destroy(Post $post): JsonResponse
     {
         if (auth()->user()->cannot('delete-post', $post)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         if ($this->postCRUDService->deletePost($post)) {
-            return response()->noContent(Response::HTTP_OK);
+            return response()->json(null, Response::HTTP_OK);
         }
-        return response()->noContent(Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

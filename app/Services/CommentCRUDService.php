@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\Paginator;
 
 class CommentCRUDService implements CommentCRUDServiceInterface
 {
-    public function getAllComments( $postId = null, bool $canViewAll = false, int $page = 0, int $perPage = 100): Collection
+    public function getAllComments( $postId = null, bool $canViewAll = false, int $page = 0, int $perPage = 100): Paginator
     {
         $query = Comment::when($postId, function (Builder $query) use ($postId) {
             $query->where('post_id', $postId);
@@ -19,8 +19,7 @@ class CommentCRUDService implements CommentCRUDServiceInterface
                         ->where('user_id', auth()->id());
                 });
         });
-        return $query->skip($page * $perPage)->take($perPage)->get();
-
+        return $query->simplePaginate($perPage, ['*'],'page', $page);
     }
 
     public function createComment(array $fields): Comment

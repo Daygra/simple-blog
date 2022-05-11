@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 
 interface ImageServiceInterface
 {
-    public function saveImage(string $path, UploadedFile $image): string;
+    public function saveImage(string $path, UploadedFile $image, string $disk = 'public'): string;
 
     public function deleteImage(string $path): bool;
 

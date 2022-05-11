@@ -18,27 +18,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::group([ 'prefix' => 'auth'], function () {
+    Route::group(['prefix' => 'auth'], function () {
         Route::post('login', [AuthController::class, 'login'])->withoutMiddleware('auth:api');
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh',[AuthController::class, 'refresh']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
         Route::post('me', [AuthController::class, 'me']);
     });
-    Route::group([ 'prefix' => 'posts'], function () {
-        Route::get('/', [PostController::class, 'index'])->withoutMiddleware('auth:api');
-        Route::post('/', [PostController::class, 'store']);
-        Route::get('/{post}',[PostController::class, 'show'])->withoutMiddleware('auth:api');
-        Route::put('/{post}', [PostController::class, 'update']);
-        Route::delete('/{post}', [PostController::class, 'destroy']);
-    });
-    Route::group([ 'prefix' => 'comments'], function () {
-        Route::get('/', [CommentController::class, 'index'])->withoutMiddleware('auth:api');
-        Route::post('/', [CommentController::class, 'store'])->withoutMiddleware('auth:api');
-        Route::get('/{comment}',[CommentController::class, 'show'])->withoutMiddleware('auth:api');
-        Route::put('/{comment}', [CommentController::class, 'update']);
-        Route::put('/moderate/{comment}', [CommentController::class, 'moderate']);
-        Route::delete('/{comment}', [CommentController::class, 'destroy']);
-    });
+
+    Route::apiResource('posts', PostController::class)->only(['index', 'show'])
+        ->withoutMiddleware('auth:api');
+    Route::apiResource('posts', PostController::class)->except(['index', 'show']);
+
+    Route::apiResource('comments', CommentController::class)->only(['index', 'show', 'store'])
+        ->withoutMiddleware('auth:api');
+    Route::apiResource('comments', CommentController::class)->except(['index', 'show', 'store']);
+    Route::put('comments/moderate/{comment}', [CommentController::class, 'moderate'])->name('comments.moderate');
 
 
 });

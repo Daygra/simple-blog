@@ -14,6 +14,9 @@ use Illuminate\Http\Response;
 
 class CommentController extends Controller
 {
+    /**
+     * @var $commentCRUDService CommentCRUDServiceInterface
+     */
     private $commentCRUDService;
 
     public function __construct(CommentCRUDServiceInterface $commentCRUDService)
@@ -37,41 +40,41 @@ class CommentController extends Controller
         return response()->json($post);
     }
 
-    public function show(Comment $comment)
+    public function show(Comment $comment): JsonResponse
     {
         $user = auth()->user() ?? new User();
         if ($user->cant('view-comment', $comment)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         return response()->json($comment);
     }
 
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment): JsonResponse
     {
         if (auth()->user()->cannot('update-comment', $comment)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         $post = $this->commentCRUDService->updateComment($comment, $request->validated());
         return response()->json($post);
     }
 
-    public function moderate(CommentModerateRequest $request, Comment $comment)
+    public function moderate(CommentModerateRequest $request, Comment $comment): JsonResponse
     {
         if (auth()->user()->cannot('moderate-comment', $comment)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         $post = $this->commentCRUDService->updateComment($comment, $request->safe()->only('is_moderated'));
         return response()->json($post);
     }
 
-    public function destroy(Comment $comment): Response
+    public function destroy(Comment $comment): JsonResponse
     {
         if (auth()->user()->cannot('delete-comment', $comment)) {
-            return response()->noContent(Response::HTTP_FORBIDDEN);
+            return response()->json(null, Response::HTTP_FORBIDDEN);
         }
         if ($this->commentCRUDService->deleteComment($comment)) {
-            return response()->noContent(Response::HTTP_OK);
+            return response()->json(null, Response::HTTP_OK);
         }
-        return response()->noContent(Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
